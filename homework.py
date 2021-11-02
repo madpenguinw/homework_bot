@@ -100,7 +100,7 @@ def check_response(response):
 
 
 def main():
-    """Запуск бота"""
+    """Запуск бота."""
     if PRACTICUM_TOKEN is None:
         logging.critical('Отсутствует PRACTICUM_TOKEN')
         exit()
