@@ -5,7 +5,7 @@ import requests
 import datetime
 import telegram
 
-
+from http import HTTPStatus
 from dotenv import load_dotenv
 
 
@@ -58,7 +58,7 @@ def get_api_answer(url, current_timestamp):
     payload = {'from_date': current_timestamp}
     try:
         response = requests.get(url, headers=headers, params=payload)
-        if response.status_code != 200:
+        if response.status_code != HTTPStatus.OK:
             message = f'Эндпоинт недоступен. Код ответа {response.status_code}'
             logger.error(message)
             raise CodeIsNot200Error(message)
@@ -84,14 +84,14 @@ def check_response(response):
     """Проверка полученного ответа."""
     homeworks = response.get('homeworks')
     status = homeworks[0].get('status')
-    if status not in HOMEWORK_STATUSES.keys():
+    if status not in HOMEWORK_STATUSES:
         message = 'Обнаружен недокументированный статус домашней работы:'
         f'{status}'
         logger.error(message)
         raise UnexpectedHomeworkStatusError(message)
     if homeworks is None:
         logger.error('Не получено значение для homeworks')
-    if homeworks == []:
+    if not homeworks:
         logger.error('На сайте нет работ, в которые были'
                      'внесены изменения за указанный промежуток времни.')
     return homeworks[0]
