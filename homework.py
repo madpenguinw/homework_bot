@@ -21,7 +21,6 @@ PRACTICUM_TOKEN = os.getenv('PRACTICUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHAT_ID = os.getenv('CHAT_ID')
 
-bot = telegram.Bot(token=TELEGRAM_TOKEN)
 
 NUMBER_OF_MIUTES = 10
 RETRY_TIME = 60 * NUMBER_OF_MIUTES
@@ -76,7 +75,6 @@ def parse_status(homework):
     if status is None:
         message = 'Не получено значение статуса домашней работы'
         logging.error(message)
-        send_message(bot, message)
     homework_name = homework.get('homework_name')
     verdict = HOMEWORK_STATUSES[status]
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
@@ -110,6 +108,7 @@ def main():
     elif CHAT_ID is None:
         logging.critical('Отсутствует CHAT_ID')
         exit()
+    bot = telegram.Bot(token=TELEGRAM_TOKEN)
     send_message(bot, 'Привет! Бот запущен.')
     dt = datetime.datetime.now()
     current_time_in_sec = time.mktime(dt.timetuple())
